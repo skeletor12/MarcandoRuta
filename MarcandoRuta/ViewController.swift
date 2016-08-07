@@ -29,10 +29,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         mapa.mapType = MKMapType.Hybrid
     }
     
-    
     let manejador = CLLocationManager()
-    var recorrido = 0.0
-   
+    var Fin: CLLocation?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,8 +41,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         manejador.desiredAccuracy = kCLLocationAccuracyKilometer;
         manejador.requestWhenInUseAuthorization()
         manejador.startMonitoringSignificantLocationChanges()
+        Fin = manejador.location
         manejador.distanceFilter = 50
-    
 
     }
     
@@ -58,9 +56,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         }
         
     }
-    
-    
-    
+
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
        let center = CLLocationCoordinate2D(latitude: manager.location!.coordinate.latitude, longitude: manager.location!.coordinate.longitude)
      
@@ -71,19 +67,23 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpanMake(zoomin, zoomin))
         self.mapa.setRegion(region, animated: true)
         
+        let distancia = Fin?.distanceFromLocation(locations.last!)
+        let distanciar = round(distancia!)
+        
         var punto = CLLocationCoordinate2D()
         punto.latitude = (manager.location?.coordinate.latitude)!
         punto.longitude = (manager.location?.coordinate.longitude)!
+        
         let pin = MKPointAnnotation()
-        pin.title = "\(punto.latitude),\(punto.longitude)"
-        let recorrido = manager.distanceFilter
-        pin.subtitle = "\(recorrido)Mts"
+        pin.title = "Latitud \(round(punto.latitude)),Lomgitud \(round(punto.longitude))"
+        pin.subtitle = "Distancia \(distanciar) Mts"
         pin.coordinate = punto
         mapa.addAnnotation(pin)
-
-       
-     }
+    }
     
-   
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        print("Error porque = \(error.localizedFailureReason)")
+    }
+    
 }
 
