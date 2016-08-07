@@ -68,15 +68,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         self.mapa.setRegion(region, animated: true)
         
         let distancia = Fin?.distanceFromLocation(locations.last!)
-        let distanciar = round(distancia!)
+        //let distanciar = round(distancia!)
         
         var punto = CLLocationCoordinate2D()
         punto.latitude = (manager.location?.coordinate.latitude)!
         punto.longitude = (manager.location?.coordinate.longitude)!
         
         let pin = MKPointAnnotation()
-        pin.title = "Latitud \(round(punto.latitude)),Lomgitud \(round(punto.longitude))"
-        pin.subtitle = "Distancia \(distanciar) Mts"
+        pin.title = "Lat. \(String(format:"%4.4f", punto.latitude)), Long. \(String(format:"%4.4f",punto.longitude))"
+        pin.subtitle = "Distancia \(String(format:"%7.2f",distancia!)) Mts"
         pin.coordinate = punto
         mapa.addAnnotation(pin)
     }
